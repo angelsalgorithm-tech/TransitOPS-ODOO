@@ -88,3 +88,60 @@ body{
     border-radius:8px;
     font-size:16px;
 }
+.table-container{
+    margin-top:30px;
+    overflow-x:auto;
+}
+
+.driver-table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.driver-table th{
+    background:#2563eb;
+    color:white;
+    padding:14px;
+    font-size:15px;
+}
+
+.driver-table td{
+    padding:14px;
+    text-align:center;
+    border-bottom:1px solid #eee;
+}
+
+.driver-table tr:hover{
+    background:#f8f9ff;
+}
+
+.available,
+.trip,
+.suspended,
+.off-duty{
+
+    padding:6px 12px;
+    border-radius:20px;
+    color:white;
+    font-size:13px;
+    font-weight:500;
+}
+
+.available{
+    background:#22c55e;
+}
+
+.trip{
+    background:#3b82f6;
+}
+
+.suspended{
+    background:#ef4444;
+}
+
+.off-duty{
+    background:#6b7280;
+}
