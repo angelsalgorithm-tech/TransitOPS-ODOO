@@ -1,43 +1,41 @@
-// nav-access.js
-const ROLE_PAGES = {
-  fleet_manager:     ["vehicles.html", "maintenance.html"],
-  dispatcher:        ["dashboard.html", "trips.html"],
-  safety_officer:    ["drivers.html", "compliance.html"],
-  financial_analyst: ["reports.html"],
-};
+// nav-access.js — hardcoded, forceful role-based sidebar visibility
+window.addEventListener("load", function () {
+  var role = (typeof getRole === "function" ? getRole() : "") || "";
+  role = role.toString().trim().toLowerCase();
 
-const ALWAYS_ALLOWED = ["settings.html"];
+  var PAGE_MAP = {
+    "dashboard.html": ["dispatcher"],
+    "vehicles.html": ["fleet_manager"],
+    "drivers.html": ["safety_officer"],
+    "compliance.html": ["safety_officer"],
+    "trips.html": ["dispatcher"],
+    "maintenance.html": ["fleet_manager"],
+    "reports.html": ["financial_analyst"],
+    "settings.html": ["*"]
+  };
 
-function normalize(str) {
-  return (str || "").toString().trim().toLowerCase().replace(/\s+/g, "_");
-}
-
-function getAllowedPages(role) {
-  const key = normalize(role);
-  return ROLE_PAGES[key] || [];
-}
-
-function applyNavAccess() {
-  const role = getRole();
-  console.log("[nav-access] raw role:", JSON.stringify(role));
-  const allowed = getAllowedPages(role);
-  console.log("[nav-access] allowed pages:", allowed);
-
-  document.querySelectorAll(".sidebar a[href]").forEach((link) => {
-    const href = normalize(link.getAttribute("href").split("#")[0]);
+  var links = document.querySelectorAll(".sidebar a[href]");
+  links.forEach(function (link) {
+    var href = link.getAttribute("href").split("#")[0].trim().toLowerCase();
     if (!href || href === "#") return;
-    const isAllowed = allowed.map(normalize).includes(href) || ALWAYS_ALLOWED.map(normalize).includes(href);
-    link.style.display = isAllowed ? "" : "none";
+
+    var allowedRoles = PAGE_MAP[href];
+    var show = !allowedRoles || allowedRoles.indexOf("*") !== -1 || allowedRoles.indexOf(role) !== -1;
+
+    if (show) {
+      link.style.setProperty("display", "block", "important");
+    } else {
+      link.style.setProperty("display", "none", "important");
+    }
   });
 
-  const currentPage = normalize(window.location.pathname.split("/").pop());
-  const isCurrentAllowed =
-    allowed.map(normalize).includes(currentPage) || ALWAYS_ALLOWED.map(normalize).includes(currentPage);
-
-  if (!isCurrentAllowed) {
-    const fallback = allowed[0] || "settings.html";
+  var currentPage = window.location.pathname.split("/").pop().toLowerCase();
+  var currentAllowed = PAGE_MAP[currentPage];
+  if (currentAllowed && currentAllowed.indexOf("*") === -1 && currentAllowed.indexOf(role) === -1) {
+    var fallback = Object.keys(PAGE_MAP).find(function (page) {
+      var roles = PAGE_MAP[page];
+      return roles.indexOf(role) !== -1;
+    }) || "settings.html";
     window.location.href = fallback;
   }
-}
-
-applyNavAccess();
+});
