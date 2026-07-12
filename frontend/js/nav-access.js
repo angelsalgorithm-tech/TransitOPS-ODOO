@@ -1,42 +1,40 @@
 // nav-access.js
-// Include this on every page AFTER auth.js and AFTER requireAuth() has run.
-// Requires getRole() to return one of: "fleet_manager", "dispatcher",
-// "safety_officer", "financial_analyst" (adjust ROLE_PAGES below if your
-// actual role strings differ).
-
 const ROLE_PAGES = {
   fleet_manager:     ["vehicles.html", "maintenance.html"],
   dispatcher:        ["dashboard.html", "trips.html"],
   safety_officer:    ["drivers.html", "compliance.html"],
-  financial_analyst: ["reports.html"], // covers both #fuel and #analytics tabs
+  financial_analyst: ["reports.html"],
 };
 
-// Pages every logged-in role can always see, regardless of role restrictions.
 const ALWAYS_ALLOWED = ["settings.html"];
 
+function normalize(str) {
+  return (str || "").toString().trim().toLowerCase().replace(/\s+/g, "_");
+}
+
 function getAllowedPages(role) {
-  return ROLE_PAGES[role] || [];
+  const key = normalize(role);
+  return ROLE_PAGES[key] || [];
 }
 
 function applyNavAccess() {
   const role = getRole();
+  console.log("[nav-access] raw role:", JSON.stringify(role));
   const allowed = getAllowedPages(role);
+  console.log("[nav-access] allowed pages:", allowed);
 
-  // 1. Hide sidebar links the current role isn't permitted to see.
   document.querySelectorAll(".sidebar a[href]").forEach((link) => {
-    const href = link.getAttribute("href").split("#")[0]; // strip #fuel/#analytics
-    if (!href || href === "#") return; // skip logout link etc.
-    const isAllowed = allowed.includes(href) || ALWAYS_ALLOWED.includes(href);
+    const href = normalize(link.getAttribute("href").split("#")[0]);
+    if (!href || href === "#") return;
+    const isAllowed = allowed.map(normalize).includes(href) || ALWAYS_ALLOWED.map(normalize).includes(href);
     link.style.display = isAllowed ? "" : "none";
   });
 
-  // 2. Block direct navigation to a page the role isn't permitted to view.
-  const currentPage = window.location.pathname.split("/").pop();
+  const currentPage = normalize(window.location.pathname.split("/").pop());
   const isCurrentAllowed =
-    allowed.includes(currentPage) || ALWAYS_ALLOWED.includes(currentPage);
+    allowed.map(normalize).includes(currentPage) || ALWAYS_ALLOWED.map(normalize).includes(currentPage);
 
   if (!isCurrentAllowed) {
-    // Redirect to the first page this role IS allowed to see.
     const fallback = allowed[0] || "settings.html";
     window.location.href = fallback;
   }
