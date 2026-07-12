@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TransitOps — Vehicles</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+<nav class="sidebar">
+  <h2>TransitOps</h2>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="vehicles.html" class="active">Fleet</a>
+  <a href="drivers.html">Drivers</a>
+  <a href="trips.html">Trips</a>
+  <a href="maintenance.html">Maintenance</a>
+  <a href="reports.html">Fuel &amp; Expenses</a>
+  <a href="reports.html">Analytics</a>
+  <a href="#" onclick="logout(); return false;" style="margin-top:20px; color:var(--red);">Log out</a>
+  <a href="#" style="margin-top:4px;">Settings</a>
+</nav>
+
+    <main class="main">
+      <div class="topbar">
+        <input type="text" class="topbar-search" id="vehicleSearch" placeholder="Search reg number or name..." />
+        <div>
+          <span class="user-badge" id="userBadge"></span>
+          <span class="role-badge" id="roleBadge"></span>
+        </div>
+      </div>
+
+      <div id="alertBox"></div>
+
+      <div class="kpi-grid" id="fleetStats" style="margin-bottom:24px;">
+        <div class="kpi-card"><div class="value">—</div><div class="label">Loading...</div></div>
+      </div>
+
+      <div class="panel-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <h3 style="margin:0;">Vehicle Registry</h3>
+          <button class="btn-primary" onclick="openModal()">+ Register Vehicle</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Reg Number</th><th>Name</th><th>Type</th><th>Max Load (kg)</th>
+              <th>Odometer</th><th>Status</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="vehicleTableBody">
+            <tr><td colspan="7">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h3>Register Vehicle</h3>
+      <div id="modalAlert"></div>
+      <form id="vehicleForm">
+        <div class="field"><label>Registration Number</label><input id="reg_number" required /></div>
+        <div class="field"><label>Name / Model</label><input id="name" required /></div>
+        <div class="field"><label>Type</label>
+          <select id="type">
+            <option>Truck</option><option>Van</option><option>Pickup</option><option>Car</option>
+          </select>
+        </div>
+        <div class="field"><label>Max Load (kg)</label><input id="max_load_kg" type="number" step="0.1" required /></div>
+        <div class="field"><label>Acquisition Cost</label><input id="acquisition_cost" type="number" step="0.01" value="0" /></div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Register</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/vehicles.js"></script>
+</body>
+</html>

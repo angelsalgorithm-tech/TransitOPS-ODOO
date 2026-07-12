@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TransitOps — Maintenance</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+   <nav class="sidebar">
+  <h2>TransitOps</h2>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="vehicles.html">Fleet</a>
+  <a href="drivers.html">Drivers</a>
+  <a href="trips.html">Trips</a>
+  <a href="maintenance.html" class="active">Maintenance</a>
+  <a href="reports.html">Fuel &amp; Expenses</a>
+  <a href="reports.html">Analytics</a>
+  <a href="#" onclick="logout(); return false;" style="margin-top:20px; color:var(--red);">Log out</a>
+  <a href="#" style="margin-top:4px;">Settings</a>
+</nav>
+
+    <main class="main">
+      <div class="topbar">
+        <h1>Maintenance</h1>
+        <button class="btn-primary" onclick="openModal()">+ Raise Maintenance Request</button>
+      </div>
+
+      <div id="alertBox"></div>
+
+      <table>
+        <thead>
+          <tr><th>Vehicle</th><th>Issue</th><th>Cost</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody id="maintenanceTableBody">
+          <tr><td colspan="5">Loading...</td></tr>
+        </tbody>
+      </table>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h3>Raise Maintenance Request</h3>
+      <div id="modalAlert"></div>
+      <form id="maintenanceForm">
+        <div class="field"><label>Vehicle</label><select id="vehicle_id" required></select></div>
+        <div class="field"><label>Issue</label><input id="issue" required /></div>
+        <div class="field"><label>Estimated Cost</label><input id="cost" type="number" step="0.01" value="0" /></div>
+        <div class="field"><label>Notes</label><textarea id="notes" rows="3"></textarea></div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/maintenance.js"></script>
+</body>
+</html>
