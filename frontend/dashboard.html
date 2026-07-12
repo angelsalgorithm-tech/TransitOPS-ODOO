@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TransitOps — Dashboard</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <nav class="sidebar">
+      <h2>TransitOps</h2>
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="vehicles.html">Vehicles</a>
+      <a href="drivers.html">Drivers</a>
+      <a href="trips.html">Trips</a>
+      <a href="maintenance.html">Maintenance</a>
+      <a href="reports.html">Reports</a>
+      <a href="#" onclick="logout(); return false;" style="margin-top:20px; color:var(--red);">Log out</a>
+    </nav>
+
+    <main class="main">
+      <div class="topbar">
+        <h1>Dashboard</h1>
+        <div class="user-badge" id="userBadge"></div>
+      </div>
+
+      <div id="alertBox"></div>
+
+      <div class="kpi-grid" id="kpiGrid">
+        <div class="kpi-card"><div class="value">—</div><div class="label">Loading...</div></div>
+      </div>
+
+      <h2 style="font-size:16px; margin: 28px 0 14px;">Quick actions</h2>
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <a href="vehicles.html" class="btn-secondary">+ Register Vehicle</a>
+        <a href="trips.html" class="btn-secondary">+ Create Trip</a>
+        <a href="maintenance.html" class="btn-secondary">+ Raise Maintenance</a>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
