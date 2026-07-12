@@ -18,6 +18,7 @@ trips_col = db["trips"]
 maintenance_col = db["maintenance_logs"]
 fuel_logs_col = db["fuel_logs"]
 expenses_col = db["expenses"]
+settings_col = db["settings"]
 
 
 async def init_indexes():

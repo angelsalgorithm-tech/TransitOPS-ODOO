@@ -11,33 +11,10 @@ function closeModal() {
   document.getElementById("vehicleForm").reset();
 }
 
-function renderStats(vehicles) {
-  const statsEl = document.getElementById("fleetStats");
-  const total = vehicles.length;
-  const available = vehicles.filter((v) => v.status === "Available").length;
-  const onTrip = vehicles.filter((v) => v.status === "On Trip").length;
-  const inShop = vehicles.filter((v) => v.status === "In Shop").length;
-  const retired = vehicles.filter((v) => v.status === "Retired").length;
-
-  const cards = [
-    { label: "Total Vehicles", value: total, cls: "kpi-blue" },
-    { label: "Available", value: available, cls: "kpi-green" },
-    { label: "On Trip", value: onTrip, cls: "kpi-blue" },
-    { label: "In Shop", value: inShop, cls: "kpi-orange" },
-    { label: "Retired", value: retired, cls: "kpi-red" },
-  ];
-  statsEl.innerHTML = cards
-    .map(
-      (c) =>
-        `<div class="kpi-card ${c.cls}"><div class="value">${c.value}</div><div class="label">${c.label}</div></div>`
-    )
-    .join("");
-}
-
 function renderTable(vehicles) {
   const tbody = document.getElementById("vehicleTableBody");
   if (!vehicles.length) {
-    tbody.innerHTML = `<tr><td colspan="7" style="color:var(--muted);">No vehicles registered yet.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" style="color:var(--muted);">No vehicles found.</td></tr>`;
     return;
   }
   tbody.innerHTML = vehicles
@@ -47,8 +24,9 @@ function renderTable(vehicles) {
       <td>${v.reg_number}</td>
       <td>${v.name}</td>
       <td>${v.type}</td>
-      <td>${v.max_load_kg}</td>
+      <td>${v.max_load_kg} kg</td>
       <td>${v.odometer}</td>
+      <td>${v.acquisition_cost != null ? v.acquisition_cost.toLocaleString() : "—"}</td>
       <td><span class="status-pill ${statusClass(v.status)}">${v.status}</span></td>
       <td>${v.status !== "Retired" ? `<button class="btn-danger" onclick="retireVehicle('${v._id}')">Retire</button>` : ""}</td>
     </tr>`
@@ -56,11 +34,24 @@ function renderTable(vehicles) {
     .join("");
 }
 
+function applyFilters() {
+  const type = document.getElementById("typeFilter").value;
+  const status = document.getElementById("statusFilter").value;
+  const reg = document.getElementById("regSearch").value.toLowerCase();
+
+  const filtered = allVehicles.filter((v) => {
+    if (type && v.type !== type) return false;
+    if (status && v.status !== status) return false;
+    if (reg && !v.reg_number.toLowerCase().includes(reg)) return false;
+    return true;
+  });
+  renderTable(filtered);
+}
+
 async function loadVehicles() {
   try {
     allVehicles = await api.get("/vehicles");
-    renderStats(allVehicles);
-    renderTable(allVehicles);
+    applyFilters();
   } catch (err) {
     document.getElementById("alertBox").innerHTML = `<div class="alert">${err.message}</div>`;
   }
@@ -94,12 +85,8 @@ document.getElementById("vehicleForm").addEventListener("submit", async (e) => {
   }
 });
 
-document.getElementById("vehicleSearch").addEventListener("input", (e) => {
-  const q = e.target.value.toLowerCase();
-  const filtered = allVehicles.filter(
-    (v) => v.reg_number.toLowerCase().includes(q) || v.name.toLowerCase().includes(q)
-  );
-  renderTable(filtered);
-});
+document.getElementById("typeFilter").addEventListener("change", applyFilters);
+document.getElementById("statusFilter").addEventListener("change", applyFilters);
+document.getElementById("regSearch").addEventListener("input", applyFilters);
 
 loadVehicles();

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import init_indexes
-from app.routers import auth, vehicles, drivers, trips, maintenance, fuel_expenses, reports
+from app.routers import auth, vehicles, drivers, trips, maintenance, fuel_expenses, reports, settings
 
 app = FastAPI(title="TransitOps API")
 
@@ -22,6 +22,7 @@ app.include_router(trips.router)
 app.include_router(maintenance.router)
 app.include_router(fuel_expenses.router)
 app.include_router(reports.router)
+app.include_router(settings.router)
 
 
 @app.on_event("startup")

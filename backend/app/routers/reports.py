@@ -36,7 +36,6 @@ async def dashboard_kpis(user=Depends(get_current_user)):
 
 @router.get("/dashboard/recent-trips")
 async def recent_trips(user=Depends(get_current_user)):
-    """Last 4 trips, newest first, with vehicle reg and driver name resolved."""
     trips = await trips_col.find().sort("_id", -1).limit(4).to_list(length=4)
     result = []
     for t in trips:
@@ -56,7 +55,6 @@ async def recent_trips(user=Depends(get_current_user)):
 
 @router.get("/dashboard/vehicle-status")
 async def vehicle_status_breakdown(user=Depends(get_current_user)):
-    """Count of vehicles per status, for the sidebar bar chart."""
     total = await vehicles_col.count_documents({})
     statuses = ["Available", "On Trip", "In Shop", "Retired"]
     breakdown = []
@@ -95,10 +93,14 @@ async def vehicle_cost_report(user=Depends(get_current_user)):
         trip_agg = await trips_col.aggregate(
             [
                 {"$match": {"vehicle_id": vid, "status": "Completed"}},
-                {"$group": {"_id": None, "total_distance": {"$sum": "$planned_distance_km"}}},
+                {"$group": {
+                    "_id": None,
+                    "total_distance": {"$sum": "$planned_distance_km"},
+                    "total_revenue": {"$sum": {"$ifNull": ["$revenue_generated", 0]}},
+                }},
             ]
         ).to_list(length=1)
-        trip_totals = trip_agg[0] if trip_agg else {"total_distance": 0}
+        trip_totals = trip_agg[0] if trip_agg else {"total_distance": 0, "total_revenue": 0}
 
         total_fuel_cost = fuel_totals.get("total_fuel_cost", 0) or 0
         total_maintenance_cost = maint_totals.get("total_maintenance_cost", 0) or 0
@@ -109,9 +111,8 @@ async def vehicle_cost_report(user=Depends(get_current_user)):
         fuel_efficiency = round(total_distance / total_liters, 2) if total_liters else None
 
         # ROI = (Revenue - (Maintenance + Fuel)) / Acquisition Cost
-        # Revenue isn't tracked yet as its own field — plug in a per-km rate or a revenue log later.
         acquisition_cost = v.get("acquisition_cost", 0) or 0
-        revenue = 0  # placeholder until a revenue/billing field exists
+        revenue = trip_totals.get("total_revenue", 0) or 0
         roi = round((revenue - operational_cost) / acquisition_cost, 3) if acquisition_cost else None
 
         report.append(
@@ -124,6 +125,7 @@ async def vehicle_cost_report(user=Depends(get_current_user)):
                 "operational_cost": operational_cost,
                 "total_distance_km": total_distance,
                 "fuel_efficiency_km_per_l": fuel_efficiency,
+                "revenue": revenue,
                 "roi": roi,
             }
         )
@@ -131,9 +133,22 @@ async def vehicle_cost_report(user=Depends(get_current_user)):
     return report
 
 
+@router.get("/reports/monthly-revenue")
+async def monthly_revenue(user=Depends(get_current_user)):
+    pipeline = [
+        {"$match": {"status": "Completed", "completed_at": {"$exists": True}}},
+        {"$group": {
+            "_id": {"$dateToString": {"format": "%Y-%m", "date": "$completed_at"}},
+            "total_revenue": {"$sum": {"$ifNull": ["$revenue_generated", 0]}},
+        }},
+        {"$sort": {"_id": 1}},
+    ]
+    results = await trips_col.aggregate(pipeline).to_list(length=100)
+    return [{"month": r["_id"], "revenue": r["total_revenue"]} for r in results]
+
+
 @router.get("/reports/expiring-licenses")
 async def expiring_licenses(user=Depends(get_current_user)):
-    """Drivers whose license has already expired or expires within 30 days."""
     from datetime import timedelta
 
     cutoff = datetime.now(timezone.utc) + timedelta(days=30)

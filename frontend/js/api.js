@@ -56,6 +56,7 @@ const api = {
   get: (path) => apiRequest(path, { method: "GET" }),
   post: (path, body, auth = true) => apiRequest(path, { method: "POST", body, auth }),
   patch: (path, body) => apiRequest(path, { method: "PATCH", body }),
+  put: (path, body) => apiRequest(path, { method: "PUT", body }),
   del: (path) => apiRequest(path, { method: "DELETE" }),
 };
 
@@ -65,10 +66,10 @@ function statusClass(status) {
 
 // Role → allowed nav hrefs
 const ROLE_SIDEBAR = {
-  fleet_manager: ["dashboard.html", "vehicles.html", "drivers.html", "maintenance.html"],
-  dispatcher: ["dashboard.html", "trips.html"],
-  safety_officer: ["dashboard.html", "drivers.html"],
-  financial_analyst: ["dashboard.html", "reports.html"],
+  fleet_manager: ["dashboard.html", "vehicles.html", "drivers.html", "maintenance.html", "reports.html", "settings.html"],
+  dispatcher: ["dashboard.html", "trips.html", "settings.html"],
+  safety_officer: ["dashboard.html", "drivers.html", "settings.html"],
+  financial_analyst: ["dashboard.html", "reports.html", "settings.html"],
 };
 
 function applySidebarRBAC() {
@@ -77,8 +78,8 @@ function applySidebarRBAC() {
 
   const allowed = ROLE_SIDEBAR[role];
   document.querySelectorAll(".sidebar a[href]").forEach((link) => {
-    const href = link.getAttribute("href");
-    if (href === "#") return; // skip logout link
+    const href = link.getAttribute("href").split("#")[0];
+    if (href === "#" || href === "") return; // skip logout link
     if (!allowed.includes(href)) {
       link.style.display = "none";
     }

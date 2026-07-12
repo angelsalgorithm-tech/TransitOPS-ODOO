@@ -89,9 +89,6 @@ async def dispatch_trip(trip_id: str, user=Depends(require_role("dispatcher"))):
     if driver["license_expiry"].replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
         raise HTTPException(status_code=400, detail="Driver's license has expired")
 
-    # Atomically flip trip + vehicle + driver status together.
-    # NOTE: multi-document transactions require MongoDB to be running as a
-    # replica set — MongoDB Atlas (including the free M0 tier) does this by default.
     async with await client.start_session() as session:
         async with session.start_transaction():
             await trips_col.update_one(
@@ -129,6 +126,7 @@ async def complete_trip(trip_id: str, payload: TripComplete, user=Depends(requir
                         "completed_at": datetime.now(timezone.utc),
                         "final_odometer": payload.final_odometer,
                         "fuel_consumed_liters": payload.fuel_consumed_liters,
+                        "revenue_generated": payload.revenue_generated,
                     }
                 },
                 session=session,

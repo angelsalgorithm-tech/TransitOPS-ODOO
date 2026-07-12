@@ -1,25 +1,22 @@
 requireAuth();
-
-function openModal() {
-  populateVehicleSelect();
-  document.getElementById("modalOverlay").classList.add("open");
-}
-function closeModal() {
-  document.getElementById("modalOverlay").classList.remove("open");
-  document.getElementById("modalAlert").innerHTML = "";
-  document.getElementById("maintenanceForm").reset();
-}
+document.getElementById("userBadge").textContent = getName();
+document.getElementById("roleBadge").textContent = getRole().replace("_", " ");
 
 async function populateVehicleSelect() {
   try {
     const vehicles = await api.get("/vehicles");
     const eligible = vehicles.filter((v) => v.status !== "On Trip" && v.status !== "Retired");
-    document.getElementById("vehicle_id").innerHTML = eligible
-      .map((v) => `<option value="${v._id}">${v.reg_number} — ${v.name} (${v.status})</option>`)
-      .join("") || `<option disabled>No eligible vehicles</option>`;
+    document.getElementById("vehicle_id").innerHTML =
+      eligible.map((v) => `<option value="${v._id}">${v.reg_number} — ${v.name} (${v.status})</option>`).join("") ||
+      `<option disabled>No eligible vehicles</option>`;
   } catch (err) {
     document.getElementById("modalAlert").innerHTML = `<div class="alert">${err.message}</div>`;
   }
+}
+
+function displayStatus(status) {
+  // Backend uses Open/Closed; display as In Shop / Completed to match vehicle lifecycle language.
+  return status === "Open" ? "In Shop" : "Completed";
 }
 
 async function loadMaintenance() {
@@ -27,20 +24,23 @@ async function loadMaintenance() {
   try {
     const logs = await api.get("/maintenance");
     if (!logs.length) {
-      tbody.innerHTML = `<tr><td colspan="5" style="color:var(--muted);">No maintenance records yet.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" style="color:var(--muted);">No maintenance records yet.</td></tr>`;
       return;
     }
     tbody.innerHTML = logs
-      .map(
-        (m) => `
+      .map((m) => {
+        const displayed = displayStatus(m.status);
+        const date = m.created_at ? new Date(m.created_at).toLocaleDateString() : "—";
+        return `
       <tr>
         <td>${m.vehicle_id.slice(-6)}</td>
         <td>${m.issue}</td>
         <td>${m.cost}</td>
-        <td><span class="status-pill ${statusClass(m.status)}">${m.status}</span></td>
+        <td>${date}</td>
+        <td><span class="status-pill ${statusClass(displayed)}">${displayed}</span></td>
         <td>${m.status === "Open" ? `<button class="btn-secondary" onclick="closeMaintenance('${m._id}')">Close</button>` : ""}</td>
-      </tr>`
-      )
+      </tr>`;
+      })
       .join("");
   } catch (err) {
     document.getElementById("alertBox").innerHTML = `<div class="alert">${err.message}</div>`;
@@ -66,11 +66,13 @@ document.getElementById("maintenanceForm").addEventListener("submit", async (e) 
   };
   try {
     await api.post("/maintenance", payload);
-    closeModal();
+    document.getElementById("maintenanceForm").reset();
+    populateVehicleSelect();
     loadMaintenance();
   } catch (err) {
     document.getElementById("modalAlert").innerHTML = `<div class="alert">${err.message}</div>`;
   }
 });
 
+populateVehicleSelect();
 loadMaintenance();
