@@ -62,3 +62,27 @@ const api = {
 function statusClass(status) {
   return "status-" + status.toLowerCase().replace(/\s+/g, "");
 }
+
+// Role → allowed nav hrefs
+const ROLE_SIDEBAR = {
+  fleet_manager: ["dashboard.html", "vehicles.html", "drivers.html", "maintenance.html"],
+  dispatcher: ["dashboard.html", "trips.html"],
+  safety_officer: ["dashboard.html", "drivers.html"],
+  financial_analyst: ["dashboard.html", "reports.html"],
+};
+
+function applySidebarRBAC() {
+  const role = localStorage.getItem("role");
+  if (!role || !ROLE_SIDEBAR[role]) return;
+
+  const allowed = ROLE_SIDEBAR[role];
+  document.querySelectorAll(".sidebar a[href]").forEach((link) => {
+    const href = link.getAttribute("href");
+    if (href === "#") return; // skip logout link
+    if (!allowed.includes(href)) {
+      link.style.display = "none";
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", applySidebarRBAC);

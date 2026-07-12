@@ -34,6 +34,39 @@ async def dashboard_kpis(user=Depends(get_current_user)):
     }
 
 
+@router.get("/dashboard/recent-trips")
+async def recent_trips(user=Depends(get_current_user)):
+    """Last 4 trips, newest first, with vehicle reg and driver name resolved."""
+    trips = await trips_col.find().sort("_id", -1).limit(4).to_list(length=4)
+    result = []
+    for t in trips:
+        vehicle = await vehicles_col.find_one({"_id": t.get("vehicle_id")}) if t.get("vehicle_id") else None
+        driver = await drivers_col.find_one({"_id": t.get("driver_id")}) if t.get("driver_id") else None
+        result.append(
+            {
+                "trip_id": str(t["_id"])[-6:].upper(),
+                "vehicle_reg": vehicle["reg_number"] if vehicle else "—",
+                "driver_name": driver["name"] if driver else "—",
+                "status": t.get("status", "Draft"),
+                "eta": t.get("eta", "—"),
+            }
+        )
+    return result
+
+
+@router.get("/dashboard/vehicle-status")
+async def vehicle_status_breakdown(user=Depends(get_current_user)):
+    """Count of vehicles per status, for the sidebar bar chart."""
+    total = await vehicles_col.count_documents({})
+    statuses = ["Available", "On Trip", "In Shop", "Retired"]
+    breakdown = []
+    for s in statuses:
+        count = await vehicles_col.count_documents({"status": s})
+        pct = round((count / total) * 100, 1) if total else 0
+        breakdown.append({"status": s, "count": count, "pct": pct})
+    return breakdown
+
+
 @router.get("/reports/vehicle-costs")
 async def vehicle_cost_report(user=Depends(get_current_user)):
     """Per-vehicle fuel + maintenance cost, fuel efficiency, and ROI."""

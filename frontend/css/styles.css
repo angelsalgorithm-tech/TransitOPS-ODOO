@@ -249,3 +249,89 @@ tr:last-child td { border-bottom: none; }
   gap: 10px;
   margin-top: 20px;
 }
+/* ---------- Dashboard v2 ---------- */
+.topbar-search {
+  max-width: 320px;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(91,157,255,0.15);
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 600;
+  margin-left: 10px;
+}
+
+.filters-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.filters-row select {
+  width: auto;
+  min-width: 140px;
+}
+
+.kpi-card { border-left: 3px solid var(--border); }
+.kpi-card.kpi-blue   { border-left-color: var(--blue); }
+.kpi-card.kpi-green  { border-left-color: var(--green); }
+.kpi-card.kpi-orange { border-left-color: var(--accent); }
+.kpi-card.kpi-red    { border-left-color: var(--red); }
+
+.dashboard-columns {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.panel-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.panel-card h3 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  margin: 0 0 16px;
+}
+
+.status-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.status-bar-row .status-name {
+  width: 80px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.status-bar-track {
+  flex: 1;
+  height: 8px;
+  background: #1a1e28;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.status-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.status-bar-fill.available { background: var(--green); }
+.status-bar-fill.ontrip    { background: var(--blue); }
+.status-bar-fill.inshop    { background: var(--accent); }
+.status-bar-fill.retired   { background: var(--red); }

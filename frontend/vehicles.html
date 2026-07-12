@@ -8,36 +8,52 @@
 </head>
 <body>
   <div class="app-shell">
-    <nav class="sidebar">
-      <h2>TransitOps</h2>
-      <a href="dashboard.html">Dashboard</a>
-      <a href="vehicles.html" class="active">Vehicles</a>
-      <a href="drivers.html">Drivers</a>
-      <a href="trips.html">Trips</a>
-      <a href="maintenance.html">Maintenance</a>
-      <a href="reports.html">Reports</a>
-      <a href="#" onclick="logout(); return false;" style="margin-top:20px; color:var(--red);">Log out</a>
-    </nav>
+<nav class="sidebar">
+  <h2>TransitOps</h2>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="vehicles.html" class="active">Fleet</a>
+  <a href="drivers.html">Drivers</a>
+  <a href="trips.html">Trips</a>
+  <a href="maintenance.html">Maintenance</a>
+  <a href="reports.html">Fuel &amp; Expenses</a>
+  <a href="reports.html">Analytics</a>
+  <a href="#" onclick="logout(); return false;" style="margin-top:20px; color:var(--red);">Log out</a>
+  <a href="#" style="margin-top:4px;">Settings</a>
+</nav>
 
     <main class="main">
       <div class="topbar">
-        <h1>Vehicle Registry</h1>
-        <button class="btn-primary" onclick="openModal()">+ Register Vehicle</button>
+        <input type="text" class="topbar-search" id="vehicleSearch" placeholder="Search reg number or name..." />
+        <div>
+          <span class="user-badge" id="userBadge"></span>
+          <span class="role-badge" id="roleBadge"></span>
+        </div>
       </div>
 
       <div id="alertBox"></div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Reg Number</th><th>Name</th><th>Type</th><th>Max Load (kg)</th>
-            <th>Odometer</th><th>Status</th><th></th>
-          </tr>
-        </thead>
-        <tbody id="vehicleTableBody">
-          <tr><td colspan="7">Loading...</td></tr>
-        </tbody>
-      </table>
+      <div class="kpi-grid" id="fleetStats" style="margin-bottom:24px;">
+        <div class="kpi-card"><div class="value">—</div><div class="label">Loading...</div></div>
+      </div>
+
+      <div class="panel-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <h3 style="margin:0;">Vehicle Registry</h3>
+          <button class="btn-primary" onclick="openModal()">+ Register Vehicle</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Reg Number</th><th>Name</th><th>Type</th><th>Max Load (kg)</th>
+              <th>Odometer</th><th>Status</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="vehicleTableBody">
+            <tr><td colspan="7">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </main>
   </div>
 
