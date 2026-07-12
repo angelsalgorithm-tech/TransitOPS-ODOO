@@ -4,116 +4,226 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drivers & Safety Profiles</title>
+
     <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
+
 <body>
 
 <div class="container">
 
     <!-- Sidebar -->
+
     <aside class="sidebar">
-        <h2>🚚 TransitOps</h2>
+
+        <div class="logo">
+            <i class="fa-solid fa-truck-fast"></i>
+            <h2>TransitOps</h2>
+        </div>
 
         <ul>
-            <li>🏠 Dashboard</li>
-            <li>🚛 Fleet</li>
-            <li class="active">👤 Drivers</li>
-            <li>🗺️ Trips</li>
-            <li>🛠️ Maintenance</li>
-            <li>⛽ Fuel & Expenses</li>
-            <li>📊 Analytics</li>
-            <li>⚙️ Settings</li>
+
+            <li><i class="fa-solid fa-chart-line"></i> Dashboard</li>
+
+            <li><i class="fa-solid fa-truck"></i> Fleet</li>
+
+            <li class="active"><i class="fa-solid fa-id-card"></i> Drivers</li>
+
+            <li><i class="fa-solid fa-route"></i> Trips</li>
+
+            <li><i class="fa-solid fa-screwdriver-wrench"></i> Maintenance</li>
+
+            <li><i class="fa-solid fa-gas-pump"></i> Fuel & Expenses</li>
+
+            <li><i class="fa-solid fa-chart-pie"></i> Analytics</li>
+
+            <li><i class="fa-solid fa-gear"></i> Settings</li>
+
         </ul>
+
     </aside>
 
-    <!-- Main Content -->
-    <main class="content">
+    <!-- Main -->
 
-        <div class="header">
+    <main class="main">
+
+        <header>
+
             <div>
+
                 <h1>Drivers & Safety Profiles</h1>
-                <p>Manage driver records, licenses and safety status.</p>
+
+                <p>Manage driver records, monitor licenses and ensure safety compliance.</p>
+
             </div>
 
-            <button class="add-btn">+ Add Driver</button>
-        </div>
+            <div class="top-right">
 
-        <div class="search-box">
-            <input type="text" placeholder="Search drivers...">
-        </div>
-        <div class="table-container">
+                <input type="text" placeholder="Search Driver...">
 
-    <table class="driver-table">
+                <button>
+                    <i class="fa-solid fa-plus"></i>
+                    Add Driver
+                </button>
 
-        <thead>
-            <tr>
-                <th>Driver</th>
-                <th>License No</th>
-                <th>Category</th>
-                <th>Expiry</th>
-                <th>Contact</th>
-                <th>Trip Compliance</th>
-                <th>Safety</th>
-                <th>Status</th>
-            </tr>
-        </thead>
+            </div>
 
-        <tbody>
+        </header>
 
-            <tr>
-                <td>Alex</td>
-                <td>DL-987215</td>
-                <td>LMV</td>
-                <td>12/2028</td>
-                <td>9876543210</td>
-                <td>96%</td>
-                <td>98</td>
-                <td><span class="available">Available</span></td>
-            </tr>
+        <!-- Driver Table -->
 
-            <tr>
-                <td>John</td>
-                <td>DL-441210</td>
-                <td>HMV</td>
-                <td>05/2025</td>
-                <td>9123456780</td>
-                <td>81%</td>
-                <td>76</td>
-                <td><span class="suspended">Suspended</span></td>
-            </tr>
+        <section class="table-section">
 
-            <tr>
-                <td>Priya</td>
-                <td>DL-770311</td>
-                <td>LMV</td>
-                <td>08/2027</td>
-                <td>9988776655</td>
-                <td>94%</td>
-                <td>92</td>
-                <td><span class="trip">On Trip</span></td>
-            </tr>
+            <table>
 
-            <tr>
-                <td>Suresh</td>
-                <td>DL-400045</td>
-                <td>HMV</td>
-                <td>01/2027</td>
-                <td>9744000000</td>
-                <td>89%</td>
-                <td>90</td>
-                <td><span class="off-duty">Off Duty</span></td>
-            </tr>
+                <thead>
 
-        </tbody>
+                <tr>
 
-    </table>
+                    <th>Driver</th>
 
-</div>
+                    <th>License No</th>
+
+                    <th>Category</th>
+
+                    <th>Expiry</th>
+
+                    <th>Contact</th>
+
+                    <th>Compliance</th>
+
+                    <th>Safety</th>
+
+                    <th>Status</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                <tr>
+
+                    <td>Alex</td>
+
+                    <td>DL987215</td>
+
+                    <td>LMV</td>
+
+                    <td>12-2028</td>
+
+                    <td>9876543210</td>
+
+                    <td>96%</td>
+
+                    <td>98</td>
+
+                    <td><span class="available">Available</span></td>
+
+                </tr>
+
+                <tr>
+
+                    <td>Priya</td>
+
+                    <td>DL781245</td>
+
+                    <td>HMV</td>
+
+                    <td>05-2027</td>
+
+                    <td>9988123456</td>
+
+                    <td>92%</td>
+
+                    <td>95</td>
+
+                    <td><span class="trip">On Trip</span></td>
+
+                </tr>
+
+                <tr>
+
+                    <td>Rahul</td>
+
+                    <td>DL102365</td>
+
+                    <td>LMV</td>
+
+                    <td>10-2026</td>
+
+                    <td>9123456780</td>
+
+                    <td>80%</td>
+
+                    <td>84</td>
+
+                    <td><span class="off">Off Duty</span></td>
+
+                </tr>
+
+                <tr>
+
+                    <td>John</td>
+
+                    <td>DL963214</td>
+
+                    <td>HMV</td>
+
+                    <td>02-2025</td>
+
+                    <td>9001122334</td>
+
+                    <td>72%</td>
+
+                    <td>68</td>
+
+                    <td><span class="suspended">Suspended</span></td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+        <!-- Bottom -->
+
+        <section class="bottom">
+
+            <h3>Driver Status</h3>
+
+            <div class="buttons">
+
+                <button class="green">Available</button>
+
+                <button class="blue">On Trip</button>
+
+                <button class="gray">Off Duty</button>
+
+                <button class="red">Suspended</button>
+
+            </div>
+
+            <p class="note">
+
+                ⚠ Drivers with expired licenses or suspended status cannot be assigned to trips.
+
+            </p>
+
+        </section>
 
     </main>
 
 </div>
 
 <script src="script.js"></script>
+
 </body>
 </html>
