@@ -13,45 +13,132 @@
   <a href="dashboard.html">Dashboard</a>
   <a href="vehicles.html">Fleet</a>
   <a href="drivers.html">Drivers</a>
+  <a href="compliance.html">Compliance</a>
   <a href="trips.html">Trips</a>
   <a href="maintenance.html">Maintenance</a>
-  <a href="reports.html" class="active">Fuel &amp; Expenses</a>
-  <a href="reports.html">Analytics</a>
-  <a href="#" onclick="logout(); return false;" style="margin-top:20px; color:var(--red);">Log out</a>
-  <a href="#" style="margin-top:4px;">Settings</a>
+  <a href="reports.html#fuel" id="navFuel">Fuel &amp; Expenses</a>
+  <a href="reports.html#analytics" id="navAnalytics">Analytics</a>
+  <a href="settings.html" style="margin-top:20px;">Settings</a>
+  <a href="#" onclick="logout(); return false;" style="color:var(--red);">Log out</a>
 </nav>
 
     <main class="main">
       <div class="topbar">
-        <h1>Reports &amp; Analytics</h1>
-        <button class="btn-secondary" onclick="exportCsv()">Export CSV</button>
+        <input type="text" class="topbar-search" placeholder="Search..." />
+        <div>
+          <span class="user-badge" id="userBadge"></span>
+          <span class="role-badge" id="roleBadge"></span>
+        </div>
       </div>
 
       <div id="alertBox"></div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Vehicle</th><th>Fuel Cost</th><th>Maintenance Cost</th>
-            <th>Operational Cost</th><th>Distance (km)</th><th>Fuel Efficiency (km/L)</th><th>ROI</th>
-          </tr>
-        </thead>
-        <tbody id="reportTableBody">
-          <tr><td colspan="7">Loading...</td></tr>
-        </tbody>
-      </table>
+      <h1 id="pageHeading" style="font-size:20px; margin: 0 0 20px;">Fuel &amp; Expense Management</h1>
 
-      <h2 style="font-size:16px; margin: 32px 0 14px;">Licenses expiring within 30 days</h2>
-      <table>
-        <thead><tr><th>Driver</th><th>License No.</th><th>Expiry</th></tr></thead>
-        <tbody id="licenseTableBody">
-          <tr><td colspan="3">Loading...</td></tr>
-        </tbody>
-      </table>
+      <!-- FUEL & EXPENSES -->
+      <div class="tab-panel" id="panelFuel">
+        <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
+          Fuel Logs
+          <button class="btn-primary" onclick="openFuelModal()">+ Log Fuel</button>
+        </div>
+        <table>
+          <thead><tr><th>Vehicle</th><th>Date</th><th>Liters</th><th>Cost</th></tr></thead>
+          <tbody id="fuelTableBody"><tr><td colspan="4">Loading...</td></tr></tbody>
+        </table>
+
+        <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
+          Other Expenses (Toll / Misc)
+          <button class="btn-primary" onclick="openExpenseModal()">+ Add Expense</button>
+        </div>
+        <table>
+          <thead><tr><th>Trip</th><th>Vehicle</th><th>Toll</th><th>Other</th><th>Maint. (Linked)</th><th>Total</th><th>Status</th></tr></thead>
+          <tbody id="expenseTableBody"><tr><td colspan="7">Loading...</td></tr></tbody>
+        </table>
+
+        <div class="total-bar">
+          <span>Total Operational Cost (Fuel + Maintenance)</span>
+          <span class="value" id="totalOperationalCost">—</span>
+        </div>
+      </div>
+
+      <!-- ANALYTICS -->
+      <div class="tab-panel" id="panelAnalytics">
+        <div class="kpi-grid">
+          <div class="kpi-card blue">
+            <div class="label">Fuel Efficiency</div>
+            <div class="value" id="kpiFuelEff">—</div>
+          </div>
+          <div class="kpi-card green">
+            <div class="label">Fleet Utilization</div>
+            <div class="value" id="kpiUtilization">—</div>
+          </div>
+          <div class="kpi-card accent">
+            <div class="label">Operational Cost</div>
+            <div class="value" id="kpiOpCost">—</div>
+          </div>
+          <div class="kpi-card green">
+            <div class="label">Vehicle ROI</div>
+            <div class="value" id="kpiRoi">—</div>
+          </div>
+        </div>
+
+        <p class="settings-note" style="margin-top:-12px; margin-bottom:16px;">
+          ROI = (Revenue − (Maintenance + Fuel)) / Acquisition Cost
+        </p>
+
+        <div class="analytics-columns">
+          <div class="panel-card">
+            <h3>Monthly Revenue</h3>
+            <div class="bar-chart" id="revenueChart"></div>
+          </div>
+          <div class="panel-card">
+            <h3>Top Costliest Vehicles</h3>
+            <div id="costliestList"></div>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
 
+  <!-- Fuel Log Modal -->
+  <div class="modal-overlay" id="fuelModalOverlay">
+    <div class="modal">
+      <h3>Log Fuel</h3>
+      <div id="fuelModalAlert"></div>
+      <form id="fuelForm">
+        <div class="field"><label>Vehicle</label><select id="fuelVehicle" required></select></div>
+        <div class="field"><label>Liters</label><input id="fuelLiters" type="number" step="0.1" required /></div>
+        <div class="field"><label>Cost</label><input id="fuelCost" type="number" step="0.01" required /></div>
+        <div class="field"><label>Date</label><input id="fuelDate" type="date" required /></div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeFuelModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Expense Modal -->
+  <div class="modal-overlay" id="expenseModalOverlay">
+    <div class="modal">
+      <h3>Add Expense</h3>
+      <div id="expenseModalAlert"></div>
+      <form id="expenseForm">
+        <div class="field"><label>Vehicle</label><select id="expenseVehicle" required></select></div>
+        <div class="field"><label>Trip (optional)</label><select id="expenseTrip"><option value="">— None —</option></select></div>
+        <div class="field"><label>Toll</label><input id="expenseToll" type="number" step="0.01" value="0" /></div>
+        <div class="field"><label>Other</label><input id="expenseOther" type="number" step="0.01" value="0" /></div>
+        <div class="field"><label>Date</label><input id="expenseDate" type="date" required /></div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeExpenseModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="js/api.js"></script>
+  <script src="js/nav-access.js"></script>
   <script src="js/reports.js"></script>
 </body>
 </html>

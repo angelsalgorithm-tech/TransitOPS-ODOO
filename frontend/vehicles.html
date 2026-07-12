@@ -11,19 +11,20 @@
 <nav class="sidebar">
   <h2>TransitOps</h2>
   <a href="dashboard.html">Dashboard</a>
-  <a href="vehicles.html" class="active">Fleet</a>
+  <a href="vehicles.html">Fleet</a>
   <a href="drivers.html">Drivers</a>
+  <a href="compliance.html">Compliance</a>
   <a href="trips.html">Trips</a>
   <a href="maintenance.html">Maintenance</a>
-  <a href="reports.html">Fuel &amp; Expenses</a>
-  <a href="reports.html">Analytics</a>
-  <a href="#" onclick="logout(); return false;" style="margin-top:20px; color:var(--red);">Log out</a>
-  <a href="#" style="margin-top:4px;">Settings</a>
+  <a href="reports.html#fuel">Fuel &amp; Expenses</a>
+  <a href="reports.html#analytics">Analytics</a>
+  <a href="settings.html" style="margin-top:20px;">Settings</a>
+  <a href="#" onclick="logout(); return false;" style="color:var(--red);">Log out</a>
 </nav>
 
     <main class="main">
       <div class="topbar">
-        <input type="text" class="topbar-search" id="vehicleSearch" placeholder="Search reg number or name..." />
+        <input type="text" class="topbar-search" id="globalSearch" placeholder="Search..." />
         <div>
           <span class="user-badge" id="userBadge"></span>
           <span class="role-badge" id="roleBadge"></span>
@@ -32,28 +33,45 @@
 
       <div id="alertBox"></div>
 
-      <div class="kpi-grid" id="fleetStats" style="margin-bottom:24px;">
-        <div class="kpi-card"><div class="value">—</div><div class="label">Loading...</div></div>
-      </div>
+      <h1 style="font-size:20px; margin: 0 0 16px;">Vehicle Registry</h1>
 
-      <div class="panel-card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-          <h3 style="margin:0;">Vehicle Registry</h3>
-          <button class="btn-primary" onclick="openModal()">+ Register Vehicle</button>
+      <div class="filters-row" style="justify-content:space-between;">
+        <div style="display:flex; gap:12px;">
+          <select id="typeFilter">
+            <option value="">Type: All</option>
+            <option value="Truck">Truck</option>
+            <option value="Van">Van</option>
+            <option value="Pickup">Pickup</option>
+            <option value="Car">Car</option>
+            <option value="Mini">Mini</option>
+          </select>
+          <select id="statusFilter">
+            <option value="">Status: All</option>
+            <option value="Available">Available</option>
+            <option value="On Trip">On Trip</option>
+            <option value="In Shop">In Shop</option>
+            <option value="Retired">Retired</option>
+          </select>
+          <input type="text" id="regSearch" placeholder="Search reg. no." style="width:180px;" />
         </div>
-
-        <table>
-          <thead>
-            <tr>
-              <th>Reg Number</th><th>Name</th><th>Type</th><th>Max Load (kg)</th>
-              <th>Odometer</th><th>Status</th><th></th>
-            </tr>
-          </thead>
-          <tbody id="vehicleTableBody">
-            <tr><td colspan="7">Loading...</td></tr>
-          </tbody>
-        </table>
+        <button class="btn-primary" onclick="openModal()">+ Add Vehicle</button>
       </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Reg. No. (Unique)</th><th>Name/Model</th><th>Type</th><th>Capacity</th>
+            <th>Odometer</th><th>Acq. Cost</th><th>Status</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="vehicleTableBody">
+          <tr><td colspan="8">Loading...</td></tr>
+        </tbody>
+      </table>
+
+      <p style="font-size:12px; color:var(--accent); margin-top:14px;">
+        Rule: Registration No. must be unique. Retired/In Shop vehicles are hidden from Trip Dispatcher.
+      </p>
     </main>
   </div>
 
@@ -66,7 +84,7 @@
         <div class="field"><label>Name / Model</label><input id="name" required /></div>
         <div class="field"><label>Type</label>
           <select id="type">
-            <option>Truck</option><option>Van</option><option>Pickup</option><option>Car</option>
+            <option>Truck</option><option>Van</option><option>Pickup</option><option>Car</option><option>Mini</option>
           </select>
         </div>
         <div class="field"><label>Max Load (kg)</label><input id="max_load_kg" type="number" step="0.1" required /></div>
@@ -80,6 +98,7 @@
   </div>
 
   <script src="js/api.js"></script>
+  <script src="js/nav-access.js"></script>
   <script src="js/vehicles.js"></script>
 </body>
 </html>

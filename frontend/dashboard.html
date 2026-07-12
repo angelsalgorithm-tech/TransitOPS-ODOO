@@ -8,18 +8,19 @@
 </head>
 <body>
   <div class="app-shell">
-    <nav class="sidebar">
-      <h2>TransitOps</h2>
-      <a href="dashboard.html" class="active">Dashboard</a>
-      <a href="vehicles.html">Fleet</a>
-      <a href="drivers.html">Drivers</a>
-      <a href="trips.html">Trips</a>
-      <a href="maintenance.html">Maintenance</a>
-      <a href="reports.html">Fuel &amp; Expenses</a>
-      <a href="reports.html">Analytics</a>
-      <a href="#" onclick="logout(); return false;" style="margin-top:20px; color:var(--red);">Log out</a>
-      <a href="#" style="margin-top:4px;">Settings</a>
-    </nav>
+  <nav class="sidebar">
+  <h2>TransitOps</h2>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="vehicles.html">Fleet</a>
+  <a href="drivers.html">Drivers</a>
+  <a href="compliance.html">Compliance</a>
+  <a href="trips.html">Trips</a>
+  <a href="maintenance.html">Maintenance</a>
+  <a href="reports.html#fuel">Fuel &amp; Expenses</a>
+  <a href="reports.html#analytics">Analytics</a>
+  <a href="settings.html" style="margin-top:20px;">Settings</a>
+  <a href="#" onclick="logout(); return false;" style="color:var(--red);">Log out</a>
+</nav>
 
     <main class="main">
       <div class="topbar">
@@ -71,6 +72,7 @@
   </div>
 
   <script src="js/api.js"></script>
+  <script src="js/nav-access.js"></script>
   <script src="js/dashboard.js"></script>
 </body>
 </html>

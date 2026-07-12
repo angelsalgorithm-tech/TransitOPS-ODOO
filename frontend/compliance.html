@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TransitOps — Compliance</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+<nav class="sidebar">
+  <h2>TransitOps</h2>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="vehicles.html">Fleet</a>
+  <a href="drivers.html">Drivers</a>
+  <a href="compliance.html" class="active">Compliance</a>
+  <a href="trips.html">Trips</a>
+  <a href="maintenance.html">Maintenance</a>
+  <a href="reports.html#fuel">Fuel &amp; Expenses</a>
+  <a href="reports.html#analytics">Analytics</a>
+  <a href="settings.html" style="margin-top:20px;">Settings</a>
+  <a href="#" onclick="logout(); return false;" style="color:var(--red);">Log out</a>
+</nav>
+
+    <main class="main">
+      <div class="topbar">
+        <input type="text" class="topbar-search" placeholder="Search..." />
+        <div>
+          <span class="user-badge" id="userBadge"></span>
+          <span class="role-badge" id="roleBadge"></span>
+        </div>
+      </div>
+
+      <div id="alertBox"></div>
+
+      <h1 style="font-size:20px; margin: 0 0 20px;">Compliance</h1>
+
+      <div class="kpi-grid" id="complianceKpiGrid">
+        <div class="kpi-card blue">
+          <div class="label">Expiring Licenses (30d)</div>
+          <div class="value" id="kpiExpiringSoon">—</div>
+        </div>
+        <div class="kpi-card accent">
+          <div class="label">Expired Licenses</div>
+          <div class="value" id="kpiExpired">—</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="label">Suspended Drivers</div>
+          <div class="value" id="kpiSuspended">—</div>
+        </div>
+      </div>
+
+      <div class="section-title">Driver License Compliance</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Driver</th><th>License No.</th><th>Category</th><th>Expiry</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="complianceTableBody">
+          <tr><td colspan="5">Loading...</td></tr>
+        </tbody>
+      </table>
+
+      <p style="font-size:12px; color:var(--accent); margin-top:14px;">
+        Rule: Licenses expiring within 30 days are flagged. Expired or Suspended drivers are blocked from trip assignment.
+      </p>
+    </main>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/nav-access.js"></script>
+  <script src="js/compliance.js"></script>
+</body>
+</html>

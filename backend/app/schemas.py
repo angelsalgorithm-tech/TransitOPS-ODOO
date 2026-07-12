@@ -74,6 +74,7 @@ class TripCreate(BaseModel):
 class TripComplete(BaseModel):
     final_odometer: float
     fuel_consumed_liters: float
+    revenue_generated: float = 0
 
 
 # ---------- Maintenance ----------
@@ -94,6 +95,14 @@ class FuelLogCreate(BaseModel):
 
 class ExpenseCreate(BaseModel):
     vehicle_id: str
-    type: str  # toll | maintenance | other
-    amount: float
+    trip_id: Optional[str] = None
+    toll: float = 0
+    other: float = 0
     date: datetime
+
+
+# ---------- Settings ----------
+class SettingsUpdate(BaseModel):
+    depot_name: Optional[str] = None
+    currency: Optional[str] = None
+    distance_unit: Optional[str] = None

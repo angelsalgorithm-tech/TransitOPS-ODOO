@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TransitOps — Settings</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+   <nav class="sidebar">
+  <h2>TransitOps</h2>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="vehicles.html">Fleet</a>
+  <a href="drivers.html">Drivers</a>
+  <a href="compliance.html">Compliance</a>
+  <a href="trips.html">Trips</a>
+  <a href="maintenance.html">Maintenance</a>
+  <a href="reports.html#fuel">Fuel &amp; Expenses</a>
+  <a href="reports.html#analytics">Analytics</a>
+  <a href="settings.html" style="margin-top:20px;">Settings</a>
+  <a href="#" onclick="logout(); return false;" style="color:var(--red);">Log out</a>
+</nav>
+    <main class="main">
+      <div class="topbar">
+        <input type="text" class="topbar-search" placeholder="Search..." />
+        <div>
+          <span class="user-badge" id="userBadge"></span>
+          <span class="role-badge" id="roleBadge"></span>
+        </div>
+      </div>
+
+      <div id="alertBox"></div>
+
+      <div class="split-columns">
+        <div class="panel-card">
+          <h3>General</h3>
+          <form id="settingsForm">
+            <div class="field"><label>Depot Name</label><input id="depotName" placeholder="e.g. Coimbatore Depot" /></div>
+            <div class="field"><label>Currency</label><input id="currency" placeholder="e.g. INR" /></div>
+            <div class="field"><label>Distance Unit</label><input id="distanceUnit" placeholder="e.g. km" /></div>
+            <button type="submit" class="btn-primary" id="saveSettingsBtn">Save changes</button>
+          </form>
+          <p class="settings-note" id="readOnlyNote" style="display:none;">
+            Only Fleet Managers can edit these settings. You're viewing in read-only mode.
+          </p>
+        </div>
+
+        <div class="panel-card">
+          <h3>Role-Based Access (RBAC)</h3>
+          <table class="rbac-table">
+            <thead>
+              <tr><th>Role</th><th>Fleet</th><th>Drivers</th><th>Trips</th><th>Maint.</th><th>Fuel/Expenses</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Fleet Manager</td>
+                <td class="rbac-yes">✓</td><td class="rbac-no">—</td><td class="rbac-no">—</td>
+                <td class="rbac-yes">✓</td><td class="rbac-yes">✓</td>
+              </tr>
+              <tr>
+                <td>Dispatcher</td>
+                <td class="rbac-no">—</td><td class="rbac-no">—</td><td class="rbac-yes">✓</td>
+                <td class="rbac-no">—</td><td class="rbac-no">—</td>
+              </tr>
+              <tr>
+                <td>Safety Officer</td>
+                <td class="rbac-no">—</td><td class="rbac-yes">✓</td><td class="rbac-no">—</td>
+                <td class="rbac-no">—</td><td class="rbac-no">—</td>
+              </tr>
+              <tr>
+                <td>Financial Analyst</td>
+                <td class="rbac-no">—</td><td class="rbac-no">—</td><td class="rbac-no">—</td>
+                <td class="rbac-no">—</td><td class="rbac-yes">✓</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="settings-note">✓ = can create/edit/delete. "—" = read-only (all logged-in roles can view every list).</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/nav-access.js"></script>
+  <script src="js/settings.js"></script>
+</body>
+</html>

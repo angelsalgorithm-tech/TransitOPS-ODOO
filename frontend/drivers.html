@@ -8,38 +8,61 @@
 </head>
 <body>
   <div class="app-shell">
-    <nav class="sidebar">
+<nav class="sidebar">
   <h2>TransitOps</h2>
   <a href="dashboard.html">Dashboard</a>
   <a href="vehicles.html">Fleet</a>
-  <a href="drivers.html" class="active">Drivers</a>
+  <a href="drivers.html">Drivers</a>
+  <a href="compliance.html">Compliance</a>
   <a href="trips.html">Trips</a>
   <a href="maintenance.html">Maintenance</a>
-  <a href="reports.html">Fuel &amp; Expenses</a>
-  <a href="reports.html">Analytics</a>
-  <a href="#" onclick="logout(); return false;" style="margin-top:20px; color:var(--red);">Log out</a>
-  <a href="#" style="margin-top:4px;">Settings</a>
+  <a href="reports.html#fuel">Fuel &amp; Expenses</a>
+  <a href="reports.html#analytics">Analytics</a>
+  <a href="settings.html" style="margin-top:20px;">Settings</a>
+  <a href="#" onclick="logout(); return false;" style="color:var(--red);">Log out</a>
 </nav>
 
     <main class="main">
       <div class="topbar">
-        <h1>Driver Management</h1>
-        <button class="btn-primary" onclick="openModal()">+ Add Driver</button>
+        <input type="text" class="topbar-search" id="driverSearch" placeholder="Search..." />
+        <div>
+          <span class="user-badge" id="userBadge"></span>
+          <span class="role-badge" id="roleBadge"></span>
+        </div>
       </div>
 
       <div id="alertBox"></div>
 
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h1 style="font-size:20px; margin:0;">Drivers &amp; Safety Profiles</h1>
+        <button class="btn-primary" onclick="openModal()">+ Add Driver</button>
+      </div>
+
       <table>
         <thead>
           <tr>
-            <th>Name</th><th>License No.</th><th>Category</th><th>Expiry</th>
-            <th>Safety Score</th><th>Status</th><th></th>
+            <th>Driver</th><th>License No.</th><th>Category</th><th>Expiry</th>
+            <th>Contact</th><th>Trip Compl.</th><th>Safety</th><th>Status</th>
           </tr>
         </thead>
         <tbody id="driverTableBody">
-          <tr><td colspan="7">Loading...</td></tr>
+          <tr><td colspan="8">Loading...</td></tr>
         </tbody>
       </table>
+
+      <div style="margin-top:24px;">
+        <p style="font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">Toggle status</p>
+        <div style="display:flex; gap:10px;" id="toggleLegend">
+          <span class="status-pill status-available">Available</span>
+          <span class="status-pill status-ontrip">On Trip</span>
+          <span class="status-pill" style="background:rgba(138,143,152,0.15); color:var(--muted);">Off Duty</span>
+          <span class="status-pill status-suspended">Suspended</span>
+        </div>
+      </div>
+
+      <p style="font-size:12px; color:var(--accent); margin-top:14px;">
+        Rule: Expired license or Suspended status → blocked from trip assignment.
+      </p>
     </main>
   </div>
 
@@ -66,6 +89,7 @@
   </div>
 
   <script src="js/api.js"></script>
+  <script src="js/nav-access.js?v=2"></script>
   <script src="js/drivers.js"></script>
 </body>
 </html>
